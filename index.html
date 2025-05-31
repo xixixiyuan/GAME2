@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>猜數字遊戲</title>
+    <title>🔮 數字奧秘：猜測遊戲 🔮</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Rajdhani:wght@700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -12,15 +12,16 @@
 <body>
     <div class="container">
         <div id="startScreen">
-            <h2>🔮 猜數字遊戲 🔮</h2>
+            <h2>🔮 數字奧秘：猜測遊戲 🔮</h2>
             <input type="text" id="playerName" placeholder="請輸入你的名字" autocomplete="off" />
             <button onclick="startGame()">🚀 開始遊戲</button>
         </div>
+
         <div id="gameScreen" style="display:none;">
             <p class="player-info">玩家：<span id="displayName"></span></p>
             <h1>猜數字遊戲</h1>
             <p class="description">試著猜出四個不重複的數字 (0-9)：</p>
-            <input type="text" id="guessInput" maxlength="4" inputmode="numeric" pattern="[0-9]*">
+            <input type="text" id="guessInput" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="輸入你的猜測">
             <div class="buttons">
                 <button id="guessButton">🔍 猜測</button>
                 <button id="giveUpButton">🏳️ 放棄</button>
@@ -48,7 +49,8 @@
                         <th>時間</th>
                     </tr>
                 </thead>
-                <tbody id="leaderboardTableBody"></tbody>
+                <tbody id="leaderboardTableBody">
+                    </tbody>
             </table>
             <p class="modal-footer">挑戰自我，成為數字大師！</p>
         </div>
