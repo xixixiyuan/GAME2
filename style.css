@@ -10,6 +10,11 @@
     --container-bg: rgba(255, 255, 255, 0.95); /* 半透明白色容器 */
     --shadow-color: rgba(0, 0, 0, 0.25);
     --border-color: #BB86FC;
+
+    /* 為了更好地定義RGB值，在CSS中定義它們，供RGBA使用 */
+    --primary-purple-rgb: 123, 31, 162; /* #7B1FA2 的 RGB */
+    --light-purple-rgb: 187, 134, 252;   /* #BB86FC 的 RGB */
+    --accent-pink-rgb: 255, 64, 129;     /* #FF4081 的 RGB */
 }
 
 body {
@@ -66,7 +71,6 @@ body::after {
     50% { transform: translate(-40px, -60px); }
     100% { transform: translate(0, 0); }
 }
-
 
 .container {
     background-color: var(--container-bg);
@@ -272,15 +276,15 @@ input[type="text"]:focus {
     text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
 }
 
-/* Modal Styles */
+/* Modal Styles - 排行榜彈出視窗 */
 .modal {
-    display: none;
+    display: none; /* 初始時隱藏 */
     position: fixed;
     z-index: 1000;
     left: 0; top: 0;
     width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.5); /* 更深的遮罩 */
-    display: flex;
+    background-color: rgba(0,0,0,0.7); /* 更深的遮罩 */
+    display: flex; /* 用 flex 實現居中，但在 showLeaderboard() 時才會變成 flex */
     justify-content: center;
     align-items: center;
     animation: modalFadeIn 0.3s ease-out;
@@ -294,4 +298,177 @@ input[type="text"]:focus {
     border-radius: 15px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.4); /* 更深的陰影 */
     position: relative;
-    animation: slideIn 0.4s cubic-bezier(0.68, -0.5
+    animation: slideIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; /* 彈跳進入動畫 */
+    border: 2px solid var(--light-purple);
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 35px;
+    cursor: pointer;
+    color: var(--primary-purple);
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.close-btn:hover {
+    color: var(--accent-pink);
+    transform: rotate(90deg); /* 旋轉效果 */
+}
+
+.modal h3 {
+    color: var(--primary-purple);
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-weight: 700;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2em;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: separate; /* 為了 border-radius */
+    border-spacing: 0;
+    margin-top: 25px;
+    background-color: rgba(255, 255, 255, 0.85); /* 半透明表格背景 */
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+th, td {
+    padding: 15px 18px;
+    border-bottom: 1px solid rgba(var(--primary-purple-rgb), 0.1);
+    text-align: center;
+    font-size: 1.05em;
+    color: var(--dark-text);
+}
+
+th {
+    background: linear-gradient(90deg, var(--light-purple), #C39BE5); /* 表頭漸變 */
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:nth-child(even) {
+    background-color: rgba(var(--light-purple-rgb), 0.05); /* 斑馬紋 */
+}
+
+tbody tr:hover {
+    background-color: rgba(var(--light-purple-rgb), 0.2); /* hover 效果 */
+    transition: background-color 0.2s ease;
+}
+
+.modal-footer {
+    margin-top: 25px;
+    font-size: 0.9em;
+    color: #6a1b9a;
+    font-style: italic;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .container {
+        padding: 30px;
+        margin: 15px;
+    }
+
+    h1 { font-size: 2.2em; }
+    h2 { font-size: 1.8em; }
+    p { font-size: 1em; }
+
+    input[type="text"] {
+        width: 180px;
+        font-size: 1.1em;
+    }
+
+    .buttons {
+        gap: 10px;
+    }
+
+    .buttons button {
+        padding: 12px 20px;
+        font-size: 0.95em;
+        width: calc(50% - 10px); /* 兩列顯示 */
+    }
+
+    .result-area {
+        min-height: 100px;
+        padding: 15px;
+    }
+
+    .modal-content {
+        padding: 25px;
+        margin: 15px;
+    }
+
+    .modal h3 {
+        font-size: 1.8em;
+    }
+
+    th, td {
+        padding: 12px 10px;
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 { font-size: 2em; }
+    h2 { font-size: 1.6em; }
+
+    input[type="text"] {
+        width: 100%; /* 全寬 */
+    }
+
+    .buttons button {
+        width: 100%; /* 單列顯示 */
+        margin: 5px 0;
+    }
+
+    /* 響應式表格，將行堆疊 */
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    td {
+        border: none;
+        border-bottom: 1px solid rgba(var(--primary-purple-rgb), 0.1);
+        position: relative;
+        padding-left: 50%; /* 留空間給標籤 */
+        text-align: right;
+    }
+
+    td:before {
+        position: absolute;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        color: var(--dark-text);
+    }
+
+    td:nth-of-type(1):before { content: "#"; }
+    td:nth-of-type(2):before { content: "玩家"; }
+    td:nth-of-type(3):before { content: "嘗試次數"; }
+    td:nth-of-type(4):before { content: "時間"; }
+}
