@@ -278,9 +278,3 @@ document.addEventListener('DOMContentLoaded', () => {
         leaderboardModal.classList.remove('is-active'); // 移除 class 隱藏 modal
     };
 }); // DOMContentLoaded 結束
-}
-
-// 隱藏排行榜彈跳視窗
-function hideLeaderboard() {
-    document.getElementById("leaderboardModal").style.display = "none";
-}
