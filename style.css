@@ -1,0 +1,297 @@
+/* 全局設定 */
+:root {
+    --primary-purple: #7B1FA2; /* 深紫色 */
+    --light-purple: #BB86FC; /* 淺紫色 */
+    --accent-pink: #FF4081; /* 桃紅色 */
+    --dark-text: #4A148C;   /* 主要深色文字 */
+    --light-text: #E0E0E0;   /* 淺色文字 (用於深背景) */
+    --bg-gradient-start: #2A0A4A; /* 背景漸變起始色 */
+    --bg-gradient-end: #4A148C;   /* 背景漸變結束色 */
+    --container-bg: rgba(255, 255, 255, 0.95); /* 半透明白色容器 */
+    --shadow-color: rgba(0, 0, 0, 0.25);
+    --border-color: #BB86FC;
+}
+
+body {
+    font-family: 'Noto Sans TC', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    line-height: 1.6;
+    color: var(--dark-text);
+    /* 華麗的背景漸變 */
+    background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+    overflow: hidden; /* 防止滾動條影響動畫 */
+    position: relative;
+}
+
+/* 背景抽象元素 */
+body::before, body::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    z-index: -1;
+}
+
+body::before {
+    width: 250px;
+    height: 250px;
+    background-color: var(--accent-pink);
+    top: -50px;
+    left: -50px;
+    animation: float1 15s ease-in-out infinite alternate;
+}
+
+body::after {
+    width: 300px;
+    height: 300px;
+    background-color: var(--light-purple);
+    bottom: -80px;
+    right: -80px;
+    animation: float2 18s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes float1 {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(30px, 50px); }
+    100% { transform: translate(0, 0); }
+}
+
+@keyframes float2 {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(-40px, -60px); }
+    100% { transform: translate(0, 0); }
+}
+
+
+.container {
+    background-color: var(--container-bg);
+    padding: 40px 50px;
+    border-radius: 15px; /* 更大的圓角 */
+    box-shadow: 0 10px 30px var(--shadow-color); /* 更深的陰影 */
+    text-align: center;
+    width: 100%;
+    max-width: 550px; /* 稍微加寬 */
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1; /* 確保在背景元素之上 */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* 半透明邊框 */
+    backdrop-filter: blur(5px); /* 輕微的毛玻璃效果 */
+    animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; /* 彈跳進入動畫 */
+}
+
+@keyframes popIn {
+    0% { opacity: 0; transform: scale(0.8) translateY(-50px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+h1, h2 {
+    font-family: 'Rajdhani', sans-serif; /* 標題使用特殊字體 */
+    color: var(--primary-purple);
+    margin-bottom: 30px;
+    font-weight: 700;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h1 { font-size: 2.8em; }
+h2 { font-size: 2.2em; }
+
+p {
+    color: var(--dark-text);
+    margin-bottom: 20px;
+    font-size: 1.1em;
+}
+
+.description {
+    font-style: italic;
+    color: #6a1b9a; /* 稍微不同的紫色 */
+}
+
+.player-info {
+    font-size: 1.2em;
+    color: var(--primary-purple);
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+
+input[type="text"] {
+    padding: 15px 20px;
+    margin-bottom: 25px;
+    border: 2px solid var(--border-color); /* 更粗的邊框 */
+    border-radius: 10px; /* 更圓的輸入框 */
+    font-size: 1.2em;
+    width: 200px; /* 稍微加寬 */
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+input[type="text"]:focus {
+    border-color: var(--accent-pink); /* 聚焦時邊框變色 */
+    box-shadow: 0 0 0 4px rgba(var(--accent-pink-rgb), 0.3); /* 更炫的光暈 */
+    outline: none;
+    background-color: white;
+}
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap; /* 換行顯示按鈕 */
+    justify-content: center;
+    gap: 15px; /* 按鈕間距 */
+    margin-bottom: 30px;
+}
+
+.buttons button {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1em;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase; /* 大寫文字 */
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden; /* 隱藏光澤超出部分 */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(0); /* 確保初始位置 */
+}
+
+/* 按鈕光澤效果 */
+.buttons button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: all 0.5s ease;
+}
+
+.buttons button:hover::before {
+    left: 100%;
+}
+
+.buttons button:hover {
+    transform: translateY(-3px) scale(1.02); /* 輕微上浮和縮放 */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.buttons button:active {
+    transform: translateY(1px) scale(0.98); /* 按下效果 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#guessButton {
+    background: linear-gradient(45deg, #8E24AA, #AB47BC); /* 紫色漸變 */
+}
+
+#giveUpButton {
+    background: linear-gradient(45deg, #D32F2F, #FF5252); /* 紅色漸變 */
+}
+
+#restartButton {
+    background: linear-gradient(45deg, #388E3C, #66BB6A); /* 綠色漸變 */
+}
+
+#answerButton {
+    background: linear-gradient(45deg, #FF6F00, #FFB300); /* 橘色漸變 */
+}
+
+/* Result Area */
+.result-area {
+    background-color: rgba(255, 255, 255, 0.7); /* 半透明背景 */
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 30px;
+    min-height: 120px; /* 增加高度 */
+    max-height: 300px;
+    overflow-y: auto;
+    text-align: left;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.08);
+    border: 1px solid rgba(var(--primary-purple-rgb), 0.2);
+}
+
+#result div {
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(var(--primary-purple-rgb), 0.1);
+    font-size: 1em;
+    color: var(--dark-text);
+    display: flex; /* 使用 flex 排列 */
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+#result div:last-child {
+    border-bottom: none;
+}
+
+#result div:hover {
+    background-color: rgba(var(--light-purple-rgb), 0.1);
+}
+
+#result .correct {
+    color: #4CAF50; /* 成功綠 */
+    font-weight: bold;
+    animation: pulse 0.5s ease-out;
+}
+
+#result .partial {
+    color: #FF9800; /* 警告橙 */
+}
+
+#result .incorrect {
+    color: #F44336; /* 錯誤紅 */
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+
+#answer {
+    margin-top: 25px;
+    font-weight: bold;
+    color: var(--primary-purple);
+    font-size: 1.2em;
+    animation: fadeIn 0.8s ease-out;
+}
+
+#answer .secret-number {
+    color: #4CAF50;
+    font-size: 1.3em;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.7); /* 更深的遮罩 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+.modal-content {
+    background: linear-gradient(160deg, #F3E5F5 0%, #E1BEE7 100%); /* 淺紫色漸變背景 */
+    padding: 35px;
+    width: 90%;
+    max-width: 650px; /* 稍微加寬 */
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4); /* 更深的陰影 */
+    position: relative;
+    animation: slideIn 0.4s cubic-bezier(0.68, -0.5
