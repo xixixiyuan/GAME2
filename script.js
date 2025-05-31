@@ -1,16 +1,16 @@
 let guessCount = 0;
-let startTime; // 新增變數來記錄遊戲開始時間
+let startTime; // 記錄遊戲開始時間
 
-// Firebase 配置 - **請務必替換為您自己的 Firebase 專案配置！**
-// 這裡的值只是範例，直接使用會導致無法連線到您的資料庫。
+// Firebase 配置 - ***請務必替換為您自己的 Firebase 專案配置！***
+// 這些是範例值，直接使用會導致無法連線到您的資料庫。
 const firebaseConfig = {
-    apiKey: "AIzaSyCoDjR058s-OkYYYPYXsbH_IrjgP8ZH1Qc", // <-- 替換成您的 API Key
-    authDomain: "game-fd471.firebaseapp.com", // <-- 替換成您的 Auth Domain
-    databaseURL: "https://game-fd471-default-rtdb.asia-southeast1.firebasedatabase.app", // <-- 替換成您的 Database URL
-    projectId: "game-fd471", // <-- 替換成您的 Project ID
-    storageBucket: "game-fd471.firebasestorage.app", // <-- 替換成您的 Storage Bucket
-    messagingSenderId: "829125391460", // <-- 替換成您的 Messaging Sender ID
-    appId: "1:829125391460:web:52418f8d5b2dc8938fdb71" // <-- 替換成您的 App ID
+    apiKey: "YOUR_API_KEY", // <-- 替換成您的實際 API Key
+    authDomain: "YOUR_AUTH_DOMAIN.firebaseapp.com", // <-- 替換成您的實際 Auth Domain
+    databaseURL: "YOUR_DATABASE_URL.firebasedatabase.app", // <-- 替換成您的實際 Database URL
+    projectId: "YOUR_PROJECT_ID", // <-- 替換成您的實際 Project ID
+    storageBucket: "YOUR_STORAGE_BUCKET.appspot.com", // <-- 替換成您的實際 Storage Bucket
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // <-- 替換成您的實際 Messaging Sender ID
+    appId: "YOUR_APP_ID" // <-- 替換成您的實際 App ID
 };
 
 // 初始化 Firebase
@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultDisplay = document.getElementById('result');
     const answerDisplay = document.getElementById('answer');
     const answerSpan = document.getElementById('answer').querySelector('.secret-number');
+    const leaderboardModal = document.getElementById('leaderboardModal'); // 獲取 modal 元素
 
     // 遊戲初始化
     initGame(); // 頁面載入時先初始化遊戲狀態
@@ -206,75 +207,77 @@ document.addEventListener('DOMContentLoaded', () => {
         startTime = Date.now(); // 記錄遊戲開始時間
         // console.log("答案已生成：", secretNumber.join('')); // 開發時可取消註解查看答案
     }
-});
 
+    // ======== 全局函數 (確保它們在 DOMContentLoaded 外部以便 HTML 直接調用) ========
 
-// ======== 全局函數 ========
+    // 開始遊戲 (從開始畫面進入遊戲畫面)
+    window.startGame = function() {
+        const nameInput = document.getElementById("playerName").value.trim();
+        if (!nameInput) {
+            alert("請輸入玩家名稱");
+            return;
+        }
+        player = nameInput;
+        document.getElementById("displayName").innerText = player;
+        document.getElementById("startScreen").style.display = "none";
+        document.getElementById("gameScreen").style.display = "block";
+        document.getElementById('guessInput').focus(); // 自動聚焦輸入框
+        startTime = Date.now(); // 設定遊戲開始時間
+    };
 
-// 開始遊戲 (從開始畫面進入遊戲畫面)
-function startGame() {
-    const nameInput = document.getElementById("playerName").value.trim();
-    if (!nameInput) {
-        alert("請輸入玩家名稱");
-        return;
-    }
-    player = nameInput;
-    document.getElementById("displayName").innerText = player;
-    document.getElementById("startScreen").style.display = "none";
-    document.getElementById("gameScreen").style.display = "block";
-    document.getElementById('guessInput').focus(); // 自動聚焦輸入框
-    // 遊戲初始化邏輯已在 DOMContentLoaded 中，確保名稱設定後遊戲可以開始
-    startTime = Date.now(); // 設定遊戲開始時間
-}
-
-// 記錄分數到 Firebase
-function recordScore(attempts, time) {
-    db.ref("leaderboard").push({
-        name: player,
-        attempts: attempts,
-        time: time, // 記錄時間 (秒)
-        timestamp: Date.now()
-    }).catch(error => {
-        console.error("寫入排行榜失敗:", error);
-        alert("記錄分數失敗，請檢查網路連線或 Firebase 設定。");
-    });
-}
-
-// 顯示排行榜彈跳視窗
-function showLeaderboard() {
-    const modal = document.getElementById("leaderboardModal");
-    const tbody = document.getElementById("leaderboardTableBody");
-    tbody.innerHTML = "<tr><td colspan='4'>載入中...</td></tr>"; // 載入中提示
-    modal.style.display = "flex"; // 顯示 modal，flex 用於居中
-
-    db.ref('leaderboard')
-        .orderByChild('attempts') // 按嘗試次數排序
-        .limitToFirst(10) // 取前 10 名
-        .once('value', snapshot => {
-            tbody.innerHTML = ""; // 清空現有內容
-            let rank = 1;
-            if (!snapshot.hasChildren()) {
-                tbody.innerHTML = "<tr><td colspan='4'>目前沒有排行榜資料</td></tr>";
-                return;
-            }
-            snapshot.forEach(child => {
-                const data = child.val();
-                const tr = document.createElement("tr");
-                // 格式化時間顯示
-                const displayTime = data.time ? `${data.time} 秒` : 'N/A';
-                tr.innerHTML = `
-                    <td>${rank++}</td>
-                    <td>${data.name}</td>
-                    <td>${data.attempts}</td>
-                    <td>${displayTime}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        })
-        .catch(error => {
-            console.error("載入排行榜失敗:", error);
-            tbody.innerHTML = "<tr><td colspan='4'>載入排行榜失敗</td></tr>";
+    // 記錄分數到 Firebase
+    window.recordScore = function(attempts, time) {
+        db.ref("leaderboard").push({
+            name: player,
+            attempts: attempts,
+            time: time, // 記錄時間 (秒)
+            timestamp: Date.now()
+        }).catch(error => {
+            console.error("寫入排行榜失敗:", error);
+            alert("記錄分數失敗，請檢查網路連線或 Firebase 設定。");
         });
+    };
+
+    // 顯示排行榜彈跳視窗
+    window.showLeaderboard = function() {
+        const tbody = document.getElementById("leaderboardTableBody");
+        tbody.innerHTML = "<tr><td colspan='4'>載入中...</td></tr>"; // 載入中提示
+        leaderboardModal.classList.add('is-active'); // 添加 class 顯示 modal
+
+        db.ref('leaderboard')
+            .orderByChild('attempts') // 按嘗試次數排序
+            .limitToFirst(10) // 取前 10 名
+            .once('value', snapshot => {
+                tbody.innerHTML = ""; // 清空現有內容
+                let rank = 1;
+                if (!snapshot.hasChildren()) {
+                    tbody.innerHTML = "<tr><td colspan='4'>目前沒有排行榜資料</td></tr>";
+                    return;
+                }
+                snapshot.forEach(child => {
+                    const data = child.val();
+                    const tr = document.createElement("tr");
+                    const displayTime = data.time ? `${data.time} 秒` : 'N/A';
+                    tr.innerHTML = `
+                        <td>${rank++}</td>
+                        <td>${data.name}</td>
+                        <td>${data.attempts}</td>
+                        <td>${displayTime}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            })
+            .catch(error => {
+                console.error("載入排行榜失敗:", error);
+                tbody.innerHTML = "<tr><td colspan='4'>載入排行榜失敗</td></tr>";
+            });
+    };
+
+    // 隱藏排行榜彈跳視窗
+    window.hideLeaderboard = function() {
+        leaderboardModal.classList.remove('is-active'); // 移除 class 隱藏 modal
+    };
+}); // DOMContentLoaded 結束
 }
 
 // 隱藏排行榜彈跳視窗
