@@ -1,17 +1,19 @@
 let guessCount = 0;
 let startTime; // 新增變數來記錄遊戲開始時間
 
-// Firebase 配置
+// Firebase 配置 - **請務必替換為您自己的 Firebase 專案配置！**
+// 這裡的值只是範例，直接使用會導致無法連線到您的資料庫。
 const firebaseConfig = {
-    apiKey: "AIzaSyCoDjR058s-OkYYYPYXsbH_IrjgP8ZH1Qc",
-    authDomain: "game-fd471.firebaseapp.com",
-    databaseURL: "https://game-fd471-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "game-fd471",
-    storageBucket: "game-fd471.firebasestorage.app",
-    messagingSenderId: "829125391460",
-    appId: "1:829125391460:web:52418f8d5b2dc8938fdb71"
+    apiKey: "AIzaSyCoDjR058s-OkYYYPYXsbH_IrjgP8ZH1Qc", // <-- 替換成您的 API Key
+    authDomain: "game-fd471.firebaseapp.com", // <-- 替換成您的 Auth Domain
+    databaseURL: "https://game-fd471-default-rtdb.asia-southeast1.firebasedatabase.app", // <-- 替換成您的 Database URL
+    projectId: "game-fd471", // <-- 替換成您的 Project ID
+    storageBucket: "game-fd471.firebasestorage.app", // <-- 替換成您的 Storage Bucket
+    messagingSenderId: "829125391460", // <-- 替換成您的 Messaging Sender ID
+    appId: "1:829125391460:web:52418f8d5b2dc8938fdb71" // <-- 替換成您的 App ID
 };
 
+// 初始化 Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
@@ -24,7 +26,9 @@ let guessHistory = []; // 儲存猜測歷史
 const winSound = document.getElementById('winSound');
 const loseSound = document.getElementById('loseSound');
 
+// 當 DOM 完全載入後執行
 document.addEventListener('DOMContentLoaded', () => {
+    // 獲取 DOM 元素
     const guessInput = document.getElementById('guessInput');
     const guessButton = document.getElementById('guessButton');
     const giveUpButton = document.getElementById('giveUpButton');
@@ -32,7 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const answerButton = document.getElementById('answerButton');
     const resultDisplay = document.getElementById('result');
     const answerDisplay = document.getElementById('answer');
-    const answerSpan = document.getElementById('answer').querySelector('.secret-number'); // 修改為 .secret-number
+    const answerSpan = document.getElementById('answer').querySelector('.secret-number');
+
+    // 遊戲初始化
+    initGame(); // 頁面載入時先初始化遊戲狀態
 
     // 生成四個不重複的數字
     function generateSecretNumber() {
@@ -89,7 +96,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (item.result === '4A0B') {
                 className = 'correct';
             } else if (item.result.includes('A') || item.result.includes('B')) {
-                className = 'partial';
+                // 如果是 0A0B 就不應該是 partial
+                if (item.result !== '0A0B') {
+                    className = 'partial';
+                } else {
+                    className = 'incorrect'; // 0A0B 應該是 incorrect
+                }
             } else {
                 className = 'incorrect';
             }
@@ -105,7 +117,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const guess = guessInput.value;
 
         // 驗證輸入
-        if (!/^\d{4}$/.test(guess) || new Set(Array.from(guess)).size !== 4) {
+        if (!/^\d{4}$/.test(guess)) {
+            alert('請輸入四個數字！');
+            return;
+        }
+        if (new Set(Array.from(guess)).size !== 4) {
             alert('請輸入四個不重複的數字！');
             return;
         }
@@ -165,6 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
         guessInput.disabled = true;
         guessButton.disabled = true;
         giveUpButton.disabled = true;
+        answerButton.disabled = true; // 禁用答案按鈕
     }
 
     // 啟用遊戲操作
@@ -172,6 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         guessInput.disabled = false;
         guessButton.disabled = false;
         giveUpButton.disabled = false;
+        answerButton.disabled = false; // 啟用答案按鈕
         guessInput.focus();
     }
 
@@ -188,10 +206,10 @@ document.addEventListener('DOMContentLoaded', () => {
         startTime = Date.now(); // 記錄遊戲開始時間
         // console.log("答案已生成：", secretNumber.join('')); // 開發時可取消註解查看答案
     }
-
-    // 確保頁面加載後初始化遊戲
-    initGame();
 });
+
+
+// ======== 全局函數 ========
 
 // 開始遊戲 (從開始畫面進入遊戲畫面)
 function startGame() {
@@ -214,7 +232,7 @@ function recordScore(attempts, time) {
     db.ref("leaderboard").push({
         name: player,
         attempts: attempts,
-        time: time, // 記錄時間
+        time: time, // 記錄時間 (秒)
         timestamp: Date.now()
     }).catch(error => {
         console.error("寫入排行榜失敗:", error);
@@ -227,7 +245,7 @@ function showLeaderboard() {
     const modal = document.getElementById("leaderboardModal");
     const tbody = document.getElementById("leaderboardTableBody");
     tbody.innerHTML = "<tr><td colspan='4'>載入中...</td></tr>"; // 載入中提示
-    modal.style.display = "flex"; // 使用 flex 讓 modal 居中
+    modal.style.display = "flex"; // 顯示 modal，flex 用於居中
 
     db.ref('leaderboard')
         .orderByChild('attempts') // 按嘗試次數排序
@@ -242,11 +260,13 @@ function showLeaderboard() {
             snapshot.forEach(child => {
                 const data = child.val();
                 const tr = document.createElement("tr");
+                // 格式化時間顯示
+                const displayTime = data.time ? `${data.time} 秒` : 'N/A';
                 tr.innerHTML = `
                     <td>${rank++}</td>
                     <td>${data.name}</td>
                     <td>${data.attempts}</td>
-                    <td>${data.time ? data.time + ' 秒' : 'N/A'}</td>
+                    <td>${displayTime}</td>
                 `;
                 tbody.appendChild(tr);
             });
