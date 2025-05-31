@@ -186,6 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
         guessInput.value = '';
         enableGame();
         startTime = Date.now(); // 記錄遊戲開始時間
+        hideLeaderboard();
         // console.log("答案已生成：", secretNumber.join('')); // 開發時可取消註解查看答案
     }
 
