@@ -10,11 +10,6 @@
     --container-bg: rgba(255, 255, 255, 0.95); /* 半透明白色容器 */
     --shadow-color: rgba(0, 0, 0, 0.25);
     --border-color: #BB86FC;
-
-    /* 為了更好地定義RGB值，在CSS中定義它們，供RGBA使用 */
-    --primary-purple-rgb: 123, 31, 162; /* #7B1FA2 的 RGB */
-    --light-purple-rgb: 187, 134, 252;   /* #BB86FC 的 RGB */
-    --accent-pink-rgb: 255, 64, 129;     /* #FF4081 的 RGB */
 }
 
 body {
@@ -71,6 +66,7 @@ body::after {
     50% { transform: translate(-40px, -60px); }
     100% { transform: translate(0, 0); }
 }
+
 
 .container {
     background-color: var(--container-bg);
@@ -276,15 +272,15 @@ input[type="text"]:focus {
     text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
 }
 
-/* Modal Styles - 排行榜彈出視窗 */
+/* Modal Styles */
 .modal {
-    display: none; /* 初始時隱藏 */
+    display: none;
     position: fixed;
     z-index: 1000;
     left: 0; top: 0;
     width: 100%; height: 100%;
     background-color: rgba(0,0,0,0.7); /* 更深的遮罩 */
-    display: flex; /* 用 flex 實現居中，但在 showLeaderboard() 時才會變成 flex */
+    display: flex;
     justify-content: center;
     align-items: center;
     animation: modalFadeIn 0.3s ease-out;
@@ -367,12 +363,20 @@ tbody tr:hover {
     transition: background-color 0.2s ease;
 }
 
+/* 為了更好地定義RGB值，在CSS中定義它們 */
+:root {
+    --primary-purple-rgb: 123, 31, 162; /* #7B1FA2 的 RGB */
+    --light-purple-rgb: 187, 134, 252;   /* #BB86FC 的 RGB */
+    --accent-pink-rgb: 255, 64, 129;     /* #FF4081 的 RGB */
+}
+
 .modal-footer {
     margin-top: 25px;
     font-size: 0.9em;
     color: #6a1b9a;
     font-style: italic;
 }
+
 
 /* 響應式設計 */
 @media (max-width: 768px) {
