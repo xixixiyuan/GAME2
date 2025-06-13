@@ -26,7 +26,7 @@ body {
     line-height: 1.6;
     color: var(--dark-text);
     background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-    overflow: hidden;
+    overflow: hidden; /* 保持主體不滾動 */
     position: relative;
 }
 
@@ -73,12 +73,15 @@ body::after {
 
 .container {
     background-color: var(--container-bg);
-    padding: 40px 50px;
+    padding: 30px 40px; /* 稍微減少 padding 以增加內容空間 */
     border-radius: 15px;
     box-shadow: 0 10px 30px var(--shadow-color);
     text-align: center;
-    width: 100%;
-    max-width: 900px; /* 增加最大寬度以容納兩欄 */
+    width: 90vw; /* 設置為視窗寬度的 90% */
+    max-width: 1400px; /* 仍然給一個較大的最大寬度，避免在超寬螢幕上過大 */
+    min-height: 80vh; /* 設置最小高度為視窗高度的 80% */
+    display: flex; /* 確保內部 flex 佈局生效 */
+    flex-direction: column; /* 讓內容在容器中垂直排列 */
     box-sizing: border-box;
     position: relative;
     z-index: 1;
@@ -277,6 +280,8 @@ input[type="text"]:focus {
     display: flex;
     gap: 30px; /* 左右欄間距 */
     text-align: left; /* 調整為左對齊 */
+    flex-grow: 1; /* 讓遊戲佈局佔據容器的剩餘空間 */
+    height: 100%; /* 確保其有高度，以便內部 flex 項目分配 */
 }
 
 .left-panel {
@@ -289,8 +294,7 @@ input[type="text"]:focus {
     border: 1px solid rgba(var(--light-purple-rgb), 0.3);
     display: flex;
     flex-direction: column;
-    /* 新增：將左側面板內容分為上下兩部分 */
-    height: 100%; /* 確保容器有高度才能分配 flex-grow */
+    height: 100%; /* 讓 left-panel 填充其父容器的高度 */
 }
 
 .right-panel {
@@ -304,18 +308,26 @@ input[type="text"]:focus {
 /* 調整玩家資訊和等級區域的佔比 */
 .player-info, .level-info {
     margin-bottom: 15px;
+    /* 新增 flex-shrink 確保在空間不足時能縮小，flex-basis 估計佔比 */
+    flex-shrink: 0; /* 不會被擠壓 */
+    flex-basis: 30%; /* 嘗試讓這部分佔 30% 的高度 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 讓內容垂直居中 */
 }
+/* 由於 player-info 和 level-info 自身的高度會影響，我們可以給它們一個 flex-basis 
+   或者簡單地讓它們自然流動，將 flex-grow 給排行榜 */
+.player-info { margin-bottom: 5px; } /* 微調間距 */
+.level-info { margin-bottom: 25px; } /* 微調間距 */
+
 
 /* 調整排行榜部分佔比 */
 .leaderboard-panel {
-    margin-top: 30px; /* 與上方資訊保持間距 */
+    margin-top: 0; /* 移除額外上邊距，讓空間分配更精確 */
     flex-grow: 1; /* 讓排行榜佔據剩餘空間 */
     display: flex;
     flex-direction: column;
-    /* 確保其高度是總高度的約 70% */
-    /* 由於 left-panel 的 flex-direction: column，子元素會自動分配空間，
-       這裡可以通過調整上方 player-info 和 level-info 的 margin-bottom
-       來間接控制其高度佔比，或者直接給定 flex-basis 配合 flex-grow/shrink */
+    min-height: 0; /* 允許 flex 項目在有滾動條時正確縮小 */
 }
 
 /* 調整排行榜標題字體大小，確保不換行 */
@@ -326,8 +338,8 @@ input[type="text"]:focus {
     overflow: hidden; /* 隱藏超出部分 */
     text-overflow: ellipsis; /* 超出部分顯示為省略號 */
     font-size: 1.6em; /* 稍微縮小字體以適應一行 */
-    /* 根據實際內容和容器寬度，可能需要進一步微調字體大小 */
     min-width: 0; /* 確保在flex容器中可以縮小 */
+    flex-shrink: 0; /* 防止標題被擠壓 */
 }
 
 
@@ -339,7 +351,7 @@ input[type="text"]:focus {
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    flex-grow: 1; /* 讓表格也跟著成長 */
+    flex-grow: 1; /* 讓表格也跟著成長，填充剩餘空間 */
     display: flex;
     flex-direction: column;
 }
@@ -348,12 +360,13 @@ input[type="text"]:focus {
     display: table; /* 確保表頭正確顯示 */
     width: 100%;
     table-layout: fixed; /* 固定列寬 */
+    flex-shrink: 0; /* 防止表頭被擠壓 */
 }
 
 .leaderboard-panel tbody {
     display: block; /* 讓 tbody 可以滾動 */
-    overflow-y: auto;
-    max-height: unset; /* 移除固定高度，讓它根據 flex-grow 自動填充 */
+    overflow-y: auto; /* **關鍵：垂直滾動條** */
+    max-height: 100%; /* 限制 tbody 的最大高度為其父容器的高度 */
     width: 100%;
 }
 
@@ -398,15 +411,35 @@ input[type="text"]:focus {
     .game-layout {
         flex-direction: column; /* 小螢幕下改為垂直堆疊 */
         gap: 20px;
+        height: auto; /* 垂直堆疊時高度自動 */
     }
     .container {
         padding: 30px;
-        max-width: 550px; /* 回歸到原來的容器寬度 */
+        max-width: 90vw; /* 繼續保持較寬的比例 */
+        min-height: unset; /* 移除最小高度限制 */
+        height: auto; /* 在垂直堆疊時高度自動 */
     }
 
     .left-panel {
         min-width: unset; /* 移除最小寬度 */
         height: auto; /* 在垂直堆疊時高度自動 */
+        flex-direction: row; /* 在小螢幕下，讓玩家資訊和排行榜水平排列（如果合適） */
+        flex-wrap: wrap; /* 允許換行 */
+        align-items: flex-start; /* 頂部對齊 */
+        justify-content: space-around; /* 均勻分佈 */
+    }
+
+    /* 小螢幕下，玩家資訊和等級的佔比調整 */
+    .player-info, .level-info {
+        flex-basis: auto; /* 恢復自動寬度 */
+        margin-bottom: 10px; /* 調整間距 */
+        text-align: center;
+        flex-grow: 1; /* 允許其成長 */
+    }
+    .leaderboard-panel {
+        flex-basis: 100%; /* 讓排行榜獨佔一行 */
+        margin-top: 10px;
+        height: auto; /* 在小螢幕下自動高度 */
     }
 
     .right-panel {
@@ -414,20 +447,21 @@ input[type="text"]:focus {
     }
 
     .leaderboard-panel tbody {
-        max-height: 180px; /* 小螢幕下限制排行榜高度 */
+        max-height: 180px; /* 小螢幕下限制排行榜高度，避免過長 */
     }
 
     .leaderboard-panel h3 {
         font-size: 1.8em; /* 在小螢幕下恢復較大字體 */
         white-space: normal; /* 允許換行 */
+        text-overflow: clip; /* 移除省略號 */
     }
 }
 
 
 @media (max-width: 768px) {
     .container {
-        padding: 30px;
-        margin: 15px;
+        padding: 25px;
+        margin: 10px;
     }
 
     h1 { font-size: 2.2em; }
@@ -462,7 +496,7 @@ input[type="text"]:focus {
 
 @media (max-width: 480px) {
     .container {
-        padding: 20px;
+        padding: 15px;
     }
 
     h1 { font-size: 2em; }
