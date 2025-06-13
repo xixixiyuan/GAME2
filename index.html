@@ -16,41 +16,41 @@
             <input type="text" id="playerName" placeholder="請輸入你的名字" autocomplete="off" />
             <button onclick="startGame()">🚀 開始遊戲</button>
         </div>
-        <div id="gameScreen" style="display:none;">
-            <p class="player-info">玩家：<span id="displayName"></span></p>
-            <h1>猜數字遊戲</h1>
-            <p class="description">試著猜出四個不重複的數字 (0-9)：</p>
-            <input type="text" id="guessInput" maxlength="4" inputmode="numeric" pattern="[0-9]*">
-            <div class="buttons">
-                <button id="guessButton">🔍 猜測</button>
-                <button id="giveUpButton">🏳️ 放棄</button>
-                <button id="restartButton" style="display:none;">🔄 重新挑戰</button>
-                <button onclick="showLeaderboard()">🏆 查看排行榜</button>
-                <button id="answerButton">看答案(測試用)</button>
-            </div>
-            <div class="result-area">
-                <p id="result"></p>
-                <p id="answer" style="display:none;">答案是：<span class="secret-number"></span></p>
-            </div>
-        </div>
-    </div>
 
-    <div id="leaderboardModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="hideLeaderboard()">&times;</span>
-            <h3>✨ 排行榜 (前 10 名) ✨</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>玩家</th>
-                        <th>嘗試次數</th>
-                        <th>時間</th>
-                    </tr>
-                </thead>
-                <tbody id="leaderboardTableBody"></tbody>
-            </table>
-            <p class="modal-footer">挑戰自我，成為數字大師！</p>
+        <div id="gameScreen" style="display:none;" class="game-layout">
+            <div class="left-panel">
+                <p class="player-info">玩家：<span id="displayName"></span></p>
+                <p class="level-info">等級：<span id="displayLevel">一般</span></p>
+                <div class="leaderboard-panel">
+                    <h3>✨ 排行榜 (前 10 名) ✨</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>玩家</th>
+                                <th>嘗試</th>
+                                <th>時間</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <h1>猜數字遊戲</h1>
+                <p class="description">試著猜出四個不重複的數字 (0-9)：</p>
+                <input type="text" id="guessInput" maxlength="4" inputmode="numeric" pattern="[0-9]*">
+                <div class="buttons">
+                    <button id="guessButton">🔍 猜測</button>
+                    <button id="giveUpButton">🏳️ 放棄</button>
+                    <button id="restartButton" style="display:none;">🔄 重新挑戰</button>
+                    </div>
+                <div class="result-area">
+                    <p id="result"></p>
+                    <p id="answer" style="display:none;">答案是：<span class="secret-number"></span></p>
+                </div>
+            </div>
         </div>
     </div>
 
