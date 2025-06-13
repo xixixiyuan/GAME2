@@ -29,10 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const guessButton = document.getElementById('guessButton');
     const giveUpButton = document.getElementById('giveUpButton');
     const restartButton = document.getElementById('restartButton');
-    const answerButton = document.getElementById('answerButton');
+    // const answerButton = document.getElementById('answerButton'); // "看答案(測試用)" 按鈕已移除，因此相關程式碼也已註銷
     const resultDisplay = document.getElementById('result');
     const answerDisplay = document.getElementById('answer');
-    const answerSpan = document.getElementById('answer').querySelector('.secret-number'); // 修改為 .secret-number
+    const answerSpan = document.getElementById('answer').querySelector('.secret-number');
 
     // 生成四個不重複的數字
     function generateSecretNumber() {
@@ -137,11 +137,11 @@ document.addEventListener('DOMContentLoaded', () => {
         alert(`你放棄了，答案是 ${secretNumber.join('')}。`);
     });
 
-    // 處理顯示答案按鈕點擊
-    answerButton.addEventListener('click', () => {
-        answerSpan.textContent = secretNumber.join('');
-        answerDisplay.style.display = 'block';
-    });
+    // 處理顯示答案按鈕點擊 (已移除，故註銷相關程式碼)
+    // answerButton.addEventListener('click', () => {
+    //     answerSpan.textContent = secretNumber.join('');
+    //     answerDisplay.style.display = 'block';
+    // });
 
     // 處理重新挑戰按鈕點擊
     restartButton.addEventListener('click', () => {
@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
         guessInput.value = '';
         enableGame();
         startTime = Date.now(); // 記錄遊戲開始時間
-        hideLeaderboard();
+        loadLeaderboard(); // 遊戲重新開始時也更新排行榜
         // console.log("答案已生成：", secretNumber.join('')); // 開發時可取消註解查看答案
     }
 
@@ -204,10 +204,10 @@ function startGame() {
     player = nameInput;
     document.getElementById("displayName").innerText = player;
     document.getElementById("startScreen").style.display = "none";
-    document.getElementById("gameScreen").style.display = "block";
+    document.getElementById("gameScreen").style.display = "flex"; // 使用 flex 佈局
     document.getElementById('guessInput').focus(); // 自動聚焦輸入框
-    // 遊戲初始化邏輯已在 DOMContentLoaded 中，確保名稱設定後遊戲可以開始
     startTime = Date.now(); // 設定遊戲開始時間
+    loadLeaderboard(); // 遊戲開始時載入排行榜
 }
 
 // 記錄分數到 Firebase
@@ -217,18 +217,18 @@ function recordScore(attempts, time) {
         attempts: attempts,
         time: time, // 記錄時間
         timestamp: Date.now()
+    }).then(() => {
+        loadLeaderboard(); // 記錄分數後重新載入排行榜
     }).catch(error => {
         console.error("寫入排行榜失敗:", error);
         alert("記錄分數失敗，請檢查網路連線或 Firebase 設定。");
     });
 }
 
-// 顯示排行榜彈跳視窗
-function showLeaderboard() {
-    const modal = document.getElementById("leaderboardModal");
+// 載入並顯示排行榜
+function loadLeaderboard() {
     const tbody = document.getElementById("leaderboardTableBody");
     tbody.innerHTML = "<tr><td colspan='4'>載入中...</td></tr>"; // 載入中提示
-    modal.style.display = "flex"; // 使用 flex 讓 modal 居中
 
     db.ref('leaderboard')
         .orderByChild('attempts') // 按嘗試次數排序
@@ -256,9 +256,4 @@ function showLeaderboard() {
             console.error("載入排行榜失敗:", error);
             tbody.innerHTML = "<tr><td colspan='4'>載入排行榜失敗</td></tr>";
         });
-}
-
-// 隱藏排行榜彈跳視窗
-function hideLeaderboard() {
-    document.getElementById("leaderboardModal").style.display = "none";
 }
