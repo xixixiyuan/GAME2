@@ -26,7 +26,8 @@ body {
     line-height: 1.6;
     color: var(--dark-text);
     background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-    overflow: hidden; /* 保持主體不滾動 */
+    overflow-y: auto; /* 允許垂直滾動 */
+    overflow-x: hidden; /* 防止水平滾動 */
     position: relative;
 }
 
@@ -73,21 +74,22 @@ body::after {
 
 .container {
     background-color: var(--container-bg);
-    padding: 30px 40px; /* 稍微減少 padding 以增加內容空間 */
+    padding: 30px 40px;
     border-radius: 15px;
     box-shadow: 0 10px 30px var(--shadow-color);
     text-align: center;
     width: 90vw; /* 設置為視窗寬度的 90% */
-    max-width: 1400px; /* 仍然給一個較大的最大寬度，避免在超寬螢幕上過大 */
+    max-width: 1400px; /* 仍然給一個較大的最大寬度 */
     min-height: 80vh; /* 設置最小高度為視窗高度的 80% */
-    display: flex; /* 確保內部 flex 佈局生效 */
-    flex-direction: column; /* 讓內容在容器中垂直排列 */
+    display: flex;
+    flex-direction: column;
     box-sizing: border-box;
     position: relative;
     z-index: 1;
     border: 1px solid rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(5px);
     animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+    margin: 20px auto; /* 確保上下也有間距，並水平居中 */
 }
 
 @keyframes popIn {
@@ -124,6 +126,44 @@ p {
     margin-bottom: 15px;
     font-weight: bold;
 }
+
+/* 難度選擇樣式 */
+.difficulty-selection {
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.difficulty-selection label {
+    font-size: 1.1em;
+    color: var(--dark-text);
+    font-weight: bold;
+}
+
+.difficulty-selection select {
+    padding: 10px 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1em;
+    background-color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    appearance: none; /* 移除瀏覽器預設樣式 */
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%237B1FA2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13%205.7L146.2%20202.7%2018.7%2075.1a17.6%2017.6%200%200%200-25.7%2023.1L133.5%20217.4a17.6%2017.6%200%200%0A0%2025.7%200%20L291.9%2092.5a17.6%2017.6%200%200%200-4.9-23.1z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 10px top 50%;
+    background-size: 12px auto;
+}
+
+.difficulty-selection select:hover {
+    border-color: var(--accent-pink);
+    box-shadow: 0 0 0 4px rgba(var(--accent-pink-rgb), 0.3);
+    outline: none;
+}
+
 
 input[type="text"] {
     padding: 15px 20px;
@@ -282,6 +322,7 @@ input[type="text"]:focus {
     text-align: left; /* 調整為左對齊 */
     flex-grow: 1; /* 讓遊戲佈局佔據容器的剩餘空間 */
     height: 100%; /* 確保其有高度，以便內部 flex 項目分配 */
+    min-height: 500px; /* 確保遊戲區域有最小高度，在小螢幕下會滾動 */
 }
 
 .left-panel {
@@ -295,6 +336,7 @@ input[type="text"]:focus {
     display: flex;
     flex-direction: column;
     height: 100%; /* 讓 left-panel 填充其父容器的高度 */
+    box-sizing: border-box; /* 確保 padding 不會使寬度超出 */
 }
 
 .right-panel {
@@ -307,27 +349,29 @@ input[type="text"]:focus {
 
 /* 調整玩家資訊和等級區域的佔比 */
 .player-info, .level-info {
-    margin-bottom: 15px;
-    /* 新增 flex-shrink 確保在空間不足時能縮小，flex-basis 估計佔比 */
+    margin-bottom: 5px; /* 微調間距 */
     flex-shrink: 0; /* 不會被擠壓 */
+}
+
+/* 將玩家資訊和等級包裝在一個 div 中，以更好地控制高度佔比 */
+.info-section {
     flex-basis: 30%; /* 嘗試讓這部分佔 30% 的高度 */
     display: flex;
     flex-direction: column;
-    justify-content: center; /* 讓內容垂直居中 */
+    justify-content: center;
+    align-items: flex-start; /* 讓文字靠左 */
+    padding-bottom: 10px; /* 與排行榜間距 */
+    box-sizing: border-box;
 }
-/* 由於 player-info 和 level-info 自身的高度會影響，我們可以給它們一個 flex-basis 
-   或者簡單地讓它們自然流動，將 flex-grow 給排行榜 */
-.player-info { margin-bottom: 5px; } /* 微調間距 */
-.level-info { margin-bottom: 25px; } /* 微調間距 */
-
 
 /* 調整排行榜部分佔比 */
 .leaderboard-panel {
     margin-top: 0; /* 移除額外上邊距，讓空間分配更精確 */
-    flex-grow: 1; /* 讓排行榜佔據剩餘空間 */
+    flex-grow: 1; /* 讓排行榜佔據剩餘空間 (約 70%) */
     display: flex;
     flex-direction: column;
     min-height: 0; /* 允許 flex 項目在有滾動條時正確縮小 */
+    box-sizing: border-box;
 }
 
 /* 調整排行榜標題字體大小，確保不換行 */
@@ -366,8 +410,10 @@ input[type="text"]:focus {
 .leaderboard-panel tbody {
     display: block; /* 讓 tbody 可以滾動 */
     overflow-y: auto; /* **關鍵：垂直滾動條** */
-    max-height: 100%; /* 限制 tbody 的最大高度為其父容器的高度 */
+    /* max-height: 100%; /* 這會讓它只在其父容器高度內滾動 */
+    flex-grow: 1; /* 讓 tbody 佔滿剩餘高度 */
     width: 100%;
+    min-height: 0; /* 允許 tbody 在 flex 佈局中正確縮小 */
 }
 
 .leaderboard-panel tbody tr {
@@ -412,10 +458,11 @@ input[type="text"]:focus {
         flex-direction: column; /* 小螢幕下改為垂直堆疊 */
         gap: 20px;
         height: auto; /* 垂直堆疊時高度自動 */
+        min-height: unset; /* 移除最小高度限制 */
     }
     .container {
-        padding: 30px;
-        max-width: 90vw; /* 繼續保持較寬的比例 */
+        padding: 25px;
+        max-width: 95vw; /* 繼續保持較寬的比例 */
         min-height: unset; /* 移除最小高度限制 */
         height: auto; /* 在垂直堆疊時高度自動 */
     }
@@ -423,23 +470,24 @@ input[type="text"]:focus {
     .left-panel {
         min-width: unset; /* 移除最小寬度 */
         height: auto; /* 在垂直堆疊時高度自動 */
-        flex-direction: row; /* 在小螢幕下，讓玩家資訊和排行榜水平排列（如果合適） */
-        flex-wrap: wrap; /* 允許換行 */
-        align-items: flex-start; /* 頂部對齊 */
-        justify-content: space-around; /* 均勻分佈 */
+        flex-direction: column; /* 小螢幕下讓左側內容再次垂直堆疊 */
+        align-items: center; /* 居中 */
+        text-align: center;
     }
 
-    /* 小螢幕下，玩家資訊和等級的佔比調整 */
-    .player-info, .level-info {
-        flex-basis: auto; /* 恢復自動寬度 */
-        margin-bottom: 10px; /* 調整間距 */
-        text-align: center;
-        flex-grow: 1; /* 允許其成長 */
+    .info-section {
+        flex-basis: auto; /* 恢復自動高度 */
+        padding-bottom: 0; /* 移除間距 */
+        align-items: center; /* 居中 */
     }
+
+    .player-info, .level-info {
+        margin-bottom: 5px; /* 調整間距 */
+    }
+
     .leaderboard-panel {
-        flex-basis: 100%; /* 讓排行榜獨佔一行 */
-        margin-top: 10px;
-        height: auto; /* 在小螢幕下自動高度 */
+        flex-basis: auto; /* 恢復自動高度 */
+        margin-top: 20px; /* 與上方資訊保持間距 */
     }
 
     .right-panel {
@@ -460,37 +508,41 @@ input[type="text"]:focus {
 
 @media (max-width: 768px) {
     .container {
-        padding: 25px;
+        padding: 20px;
         margin: 10px;
     }
 
-    h1 { font-size: 2.2em; }
-    h2 { font-size: 1.8em; }
-    p { font-size: 1em; }
+    h1 { font-size: 2em; }
+    h2 { font-size: 1.6em; }
+    p { font-size: 0.95em; }
 
     input[type="text"] {
-        width: 180px;
-        font-size: 1.1em;
+        width: 150px;
+        font-size: 1em;
     }
 
     .buttons {
-        gap: 10px;
+        gap: 8px;
     }
 
     .buttons button {
-        padding: 12px 20px;
-        font-size: 0.95em;
-        width: calc(50% - 10px);
+        padding: 10px 18px;
+        font-size: 0.9em;
+        width: calc(50% - 8px);
     }
 
     .result-area {
-        min-height: 100px;
-        padding: 15px;
+        min-height: 80px;
+        padding: 12px;
     }
 
     .leaderboard-panel th, .leaderboard-panel td {
-        padding: 8px 6px; /* 縮小排行榜單元格填充 */
-        font-size: 0.85em;
+        padding: 6px 4px; /* 縮小排行榜單元格填充 */
+        font-size: 0.8em;
+    }
+    .difficulty-selection {
+        flex-direction: column;
+        gap: 5px;
     }
 }
 
@@ -499,8 +551,8 @@ input[type="text"]:focus {
         padding: 15px;
     }
 
-    h1 { font-size: 2em; }
-    h2 { font-size: 1.6em; }
+    h1 { font-size: 1.8em; }
+    h2 { font-size: 1.4em; }
 
     input[type="text"] {
         width: 100%;
