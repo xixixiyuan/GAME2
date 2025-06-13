@@ -10,6 +10,10 @@
     --container-bg: rgba(255, 255, 255, 0.95); /* 半透明白色容器 */
     --shadow-color: rgba(0, 0, 0, 0.25);
     --border-color: #BB86FC;
+
+    --primary-purple-rgb: 123, 31, 162; /* #7B1FA2 的 RGB */
+    --light-purple-rgb: 187, 134, 252;   /* #BB86FC 的 RGB */
+    --accent-pink-rgb: 255, 64, 129;     /* #FF4081 的 RGB */
 }
 
 body {
@@ -21,9 +25,8 @@ body {
     margin: 0;
     line-height: 1.6;
     color: var(--dark-text);
-    /* 華麗的背景漸變 */
     background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-    overflow: hidden; /* 防止滾動條影響動畫 */
+    overflow: hidden;
     position: relative;
 }
 
@@ -71,17 +74,17 @@ body::after {
 .container {
     background-color: var(--container-bg);
     padding: 40px 50px;
-    border-radius: 15px; /* 更大的圓角 */
-    box-shadow: 0 10px 30px var(--shadow-color); /* 更深的陰影 */
+    border-radius: 15px;
+    box-shadow: 0 10px 30px var(--shadow-color);
     text-align: center;
     width: 100%;
-    max-width: 550px; /* 稍微加寬 */
+    max-width: 900px; /* 增加最大寬度以容納兩欄 */
     box-sizing: border-box;
     position: relative;
-    z-index: 1; /* 確保在背景元素之上 */
-    border: 1px solid rgba(255, 255, 255, 0.3); /* 半透明邊框 */
-    backdrop-filter: blur(5px); /* 輕微的毛玻璃效果 */
-    animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; /* 彈跳進入動畫 */
+    z-index: 1;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(5px);
+    animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
 }
 
 @keyframes popIn {
@@ -89,8 +92,8 @@ body::after {
     100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-h1, h2 {
-    font-family: 'Rajdhani', sans-serif; /* 標題使用特殊字體 */
+h1, h2, h3 {
+    font-family: 'Rajdhani', sans-serif;
     color: var(--primary-purple);
     margin-bottom: 30px;
     font-weight: 700;
@@ -99,6 +102,7 @@ h1, h2 {
 
 h1 { font-size: 2.8em; }
 h2 { font-size: 2.2em; }
+h3 { font-size: 1.8em; margin-bottom: 20px;}
 
 p {
     color: var(--dark-text);
@@ -108,23 +112,23 @@ p {
 
 .description {
     font-style: italic;
-    color: #6a1b9a; /* 稍微不同的紫色 */
+    color: #6a1b9a;
 }
 
-.player-info {
+.player-info, .level-info {
     font-size: 1.2em;
     color: var(--primary-purple);
-    margin-bottom: 25px;
+    margin-bottom: 15px;
     font-weight: bold;
 }
 
 input[type="text"] {
     padding: 15px 20px;
     margin-bottom: 25px;
-    border: 2px solid var(--border-color); /* 更粗的邊框 */
-    border-radius: 10px; /* 更圓的輸入框 */
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
     font-size: 1.2em;
-    width: 200px; /* 稍微加寬 */
+    width: 200px;
     text-align: center;
     background-color: rgba(255, 255, 255, 0.8);
     transition: all 0.3s ease;
@@ -132,17 +136,17 @@ input[type="text"] {
 }
 
 input[type="text"]:focus {
-    border-color: var(--accent-pink); /* 聚焦時邊框變色 */
-    box-shadow: 0 0 0 4px rgba(var(--accent-pink-rgb), 0.3); /* 更炫的光暈 */
+    border-color: var(--accent-pink);
+    box-shadow: 0 0 0 4px rgba(var(--accent-pink-rgb), 0.3);
     outline: none;
     background-color: white;
 }
 
 .buttons {
     display: flex;
-    flex-wrap: wrap; /* 換行顯示按鈕 */
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 15px; /* 按鈕間距 */
+    gap: 15px;
     margin-bottom: 30px;
 }
 
@@ -154,13 +158,13 @@ input[type="text"]:focus {
     cursor: pointer;
     color: white;
     font-weight: bold;
-    text-transform: uppercase; /* 大寫文字 */
+    text-transform: uppercase;
     letter-spacing: 1px;
     transition: all 0.3s ease;
     position: relative;
-    overflow: hidden; /* 隱藏光澤超出部分 */
+    overflow: hidden;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    transform: translateY(0); /* 確保初始位置 */
+    transform: translateY(0);
 }
 
 /* 按鈕光澤效果 */
@@ -180,38 +184,34 @@ input[type="text"]:focus {
 }
 
 .buttons button:hover {
-    transform: translateY(-3px) scale(1.02); /* 輕微上浮和縮放 */
+    transform: translateY(-3px) scale(1.02);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .buttons button:active {
-    transform: translateY(1px) scale(0.98); /* 按下效果 */
+    transform: translateY(1px) scale(0.98);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 #guessButton {
-    background: linear-gradient(45deg, #8E24AA, #AB47BC); /* 紫色漸變 */
+    background: linear-gradient(45deg, #8E24AA, #AB47BC);
 }
 
 #giveUpButton {
-    background: linear-gradient(45deg, #D32F2F, #FF5252); /* 紅色漸變 */
+    background: linear-gradient(45deg, #D32F2F, #FF5252);
 }
 
 #restartButton {
-    background: linear-gradient(45deg, #388E3C, #66BB6A); /* 綠色漸變 */
-}
-
-#answerButton {
-    background: linear-gradient(45deg, #FF6F00, #FFB300); /* 橘色漸變 */
+    background: linear-gradient(45deg, #388E3C, #66BB6A);
 }
 
 /* Result Area */
 .result-area {
-    background-color: rgba(255, 255, 255, 0.7); /* 半透明背景 */
+    background-color: rgba(255, 255, 255, 0.7);
     border-radius: 10px;
     padding: 20px;
     margin-top: 30px;
-    min-height: 120px; /* 增加高度 */
+    min-height: 120px;
     max-height: 300px;
     overflow-y: auto;
     text-align: left;
@@ -224,7 +224,7 @@ input[type="text"]:focus {
     border-bottom: 1px dashed rgba(var(--primary-purple-rgb), 0.1);
     font-size: 1em;
     color: var(--dark-text);
-    display: flex; /* 使用 flex 排列 */
+    display: flex;
     justify-content: space-between;
     align-items: center;
     transition: background-color 0.2s ease;
@@ -239,17 +239,17 @@ input[type="text"]:focus {
 }
 
 #result .correct {
-    color: #4CAF50; /* 成功綠 */
+    color: #4CAF50;
     font-weight: bold;
     animation: pulse 0.5s ease-out;
 }
 
 #result .partial {
-    color: #FF9800; /* 警告橙 */
+    color: #FF9800;
 }
 
 #result .incorrect {
-    color: #F44336; /* 錯誤紅 */
+    color: #F44336;
 }
 
 @keyframes pulse {
@@ -272,113 +272,158 @@ input[type="text"]:focus {
     text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
 }
 
-/* Modal Styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.7); /* 更深的遮罩 */
+/* 新增的左右佈局樣式 */
+.game-layout {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    animation: modalFadeIn 0.3s ease-out;
+    gap: 30px; /* 左右欄間距 */
+    text-align: left; /* 調整為左對齊 */
 }
 
-.modal-content {
-    background: linear-gradient(160deg, #F3E5F5 0%, #E1BEE7 100%); /* 淺紫色漸變背景 */
-    padding: 35px;
-    width: 90%;
-    max-width: 650px; /* 稍微加寬 */
-    border-radius: 15px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.4); /* 更深的陰影 */
-    position: relative;
-    animation: slideIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; /* 彈跳進入動畫 */
-    border: 2px solid var(--light-purple);
+.left-panel {
+    flex: 1; /* 佔據一份空間 (約 1/3) */
+    min-width: 280px; /* 最小寬度，防止過窄 */
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(var(--light-purple-rgb), 0.3);
+    display: flex;
+    flex-direction: column;
+    /* 新增：將左側面板內容分為上下兩部分 */
+    height: 100%; /* 確保容器有高度才能分配 flex-grow */
 }
 
-.close-btn {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 35px;
-    cursor: pointer;
+.right-panel {
+    flex: 2; /* 佔據兩份空間 (約 2/3)，讓右側內容區域更大 */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 讓右側內容居中 */
+    text-align: center;
+}
+
+/* 調整玩家資訊和等級區域的佔比 */
+.player-info, .level-info {
+    margin-bottom: 15px;
+}
+
+/* 調整排行榜部分佔比 */
+.leaderboard-panel {
+    margin-top: 30px; /* 與上方資訊保持間距 */
+    flex-grow: 1; /* 讓排行榜佔據剩餘空間 */
+    display: flex;
+    flex-direction: column;
+    /* 確保其高度是總高度的約 70% */
+    /* 由於 left-panel 的 flex-direction: column，子元素會自動分配空間，
+       這裡可以通過調整上方 player-info 和 level-info 的 margin-bottom
+       來間接控制其高度佔比，或者直接給定 flex-basis 配合 flex-grow/shrink */
+}
+
+/* 調整排行榜標題字體大小，確保不換行 */
+.leaderboard-panel h3 {
+    margin-bottom: 15px;
     color: var(--primary-purple);
-    transition: color 0.2s ease, transform 0.2s ease;
+    white-space: nowrap; /* 防止文字換行 */
+    overflow: hidden; /* 隱藏超出部分 */
+    text-overflow: ellipsis; /* 超出部分顯示為省略號 */
+    font-size: 1.6em; /* 稍微縮小字體以適應一行 */
+    /* 根據實際內容和容器寬度，可能需要進一步微調字體大小 */
+    min-width: 0; /* 確保在flex容器中可以縮小 */
 }
 
-.close-btn:hover {
-    color: var(--accent-pink);
-    transform: rotate(90deg); /* 旋轉效果 */
-}
 
-.modal h3 {
-    color: var(--primary-purple);
-    margin-top: 0;
-    margin-bottom: 25px;
-    font-weight: 700;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 2em;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-table {
+.leaderboard-panel table {
     width: 100%;
-    border-collapse: separate; /* 為了 border-radius */
+    border-collapse: separate;
     border-spacing: 0;
-    margin-top: 25px;
-    background-color: rgba(255, 255, 255, 0.85); /* 半透明表格背景 */
+    background-color: rgba(255, 255, 255, 0.85);
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    flex-grow: 1; /* 讓表格也跟著成長 */
+    display: flex;
+    flex-direction: column;
 }
 
-th, td {
-    padding: 15px 18px;
+.leaderboard-panel thead {
+    display: table; /* 確保表頭正確顯示 */
+    width: 100%;
+    table-layout: fixed; /* 固定列寬 */
+}
+
+.leaderboard-panel tbody {
+    display: block; /* 讓 tbody 可以滾動 */
+    overflow-y: auto;
+    max-height: unset; /* 移除固定高度，讓它根據 flex-grow 自動填充 */
+    width: 100%;
+}
+
+.leaderboard-panel tbody tr {
+    display: table; /* 確保行正確顯示 */
+    width: 100%;
+    table-layout: fixed;
+}
+
+.leaderboard-panel th, .leaderboard-panel td {
+    padding: 10px 12px;
     border-bottom: 1px solid rgba(var(--primary-purple-rgb), 0.1);
     text-align: center;
-    font-size: 1.05em;
+    font-size: 0.95em;
     color: var(--dark-text);
 }
 
-th {
-    background: linear-gradient(90deg, var(--light-purple), #C39BE5); /* 表頭漸變 */
+.leaderboard-panel th {
+    background: linear-gradient(90deg, var(--light-purple), #C39BE5);
     color: white;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-tbody tr:last-child td {
+.leaderboard-panel tbody tr:last-child td {
     border-bottom: none;
 }
 
-tbody tr:nth-child(even) {
-    background-color: rgba(var(--light-purple-rgb), 0.05); /* 斑馬紋 */
+.leaderboard-panel tbody tr:nth-child(even) {
+    background-color: rgba(var(--light-purple-rgb), 0.05);
 }
 
-tbody tr:hover {
-    background-color: rgba(var(--light-purple-rgb), 0.2); /* hover 效果 */
+.leaderboard-panel tbody tr:hover {
+    background-color: rgba(var(--light-purple-rgb), 0.2);
     transition: background-color 0.2s ease;
-}
-
-/* 為了更好地定義RGB值，在CSS中定義它們 */
-:root {
-    --primary-purple-rgb: 123, 31, 162; /* #7B1FA2 的 RGB */
-    --light-purple-rgb: 187, 134, 252;   /* #BB86FC 的 RGB */
-    --accent-pink-rgb: 255, 64, 129;     /* #FF4081 的 RGB */
-}
-
-.modal-footer {
-    margin-top: 25px;
-    font-size: 0.9em;
-    color: #6a1b9a;
-    font-style: italic;
 }
 
 
 /* 響應式設計 */
+@media (max-width: 900px) {
+    .game-layout {
+        flex-direction: column; /* 小螢幕下改為垂直堆疊 */
+        gap: 20px;
+    }
+    .container {
+        padding: 30px;
+        max-width: 550px; /* 回歸到原來的容器寬度 */
+    }
+
+    .left-panel {
+        min-width: unset; /* 移除最小寬度 */
+        height: auto; /* 在垂直堆疊時高度自動 */
+    }
+
+    .right-panel {
+        padding-top: 0; /* 移除額外間距 */
+    }
+
+    .leaderboard-panel tbody {
+        max-height: 180px; /* 小螢幕下限制排行榜高度 */
+    }
+
+    .leaderboard-panel h3 {
+        font-size: 1.8em; /* 在小螢幕下恢復較大字體 */
+        white-space: normal; /* 允許換行 */
+    }
+}
+
+
 @media (max-width: 768px) {
     .container {
         padding: 30px;
@@ -401,7 +446,7 @@ tbody tr:hover {
     .buttons button {
         padding: 12px 20px;
         font-size: 0.95em;
-        width: calc(50% - 10px); /* 兩列顯示 */
+        width: calc(50% - 10px);
     }
 
     .result-area {
@@ -409,18 +454,9 @@ tbody tr:hover {
         padding: 15px;
     }
 
-    .modal-content {
-        padding: 25px;
-        margin: 15px;
-    }
-
-    .modal h3 {
-        font-size: 1.8em;
-    }
-
-    th, td {
-        padding: 12px 10px;
-        font-size: 0.9em;
+    .leaderboard-panel th, .leaderboard-panel td {
+        padding: 8px 6px; /* 縮小排行榜單元格填充 */
+        font-size: 0.85em;
     }
 }
 
@@ -433,34 +469,39 @@ tbody tr:hover {
     h2 { font-size: 1.6em; }
 
     input[type="text"] {
-        width: 100%; /* 全寬 */
+        width: 100%;
     }
 
     .buttons button {
-        width: 100%; /* 單列顯示 */
+        width: 100%;
         margin: 5px 0;
     }
 
     /* 響應式表格，將行堆疊 */
-    table, thead, tbody, th, td, tr {
+    .leaderboard-panel table,
+    .leaderboard-panel thead,
+    .leaderboard-panel tbody,
+    .leaderboard-panel th,
+    .leaderboard-panel td,
+    .leaderboard-panel tr {
         display: block;
     }
 
-    thead tr {
+    .leaderboard-panel thead tr {
         position: absolute;
         top: -9999px;
         left: -9999px;
     }
 
-    td {
+    .leaderboard-panel td {
         border: none;
         border-bottom: 1px solid rgba(var(--primary-purple-rgb), 0.1);
         position: relative;
-        padding-left: 50%; /* 留空間給標籤 */
+        padding-left: 50%;
         text-align: right;
     }
 
-    td:before {
+    .leaderboard-panel td:before {
         position: absolute;
         left: 6px;
         width: 45%;
@@ -471,8 +512,8 @@ tbody tr:hover {
         color: var(--dark-text);
     }
 
-    td:nth-of-type(1):before { content: "#"; }
+    .leaderboard-panel td:nth-of-type(1):before { content: "#"; }
     td:nth-of-type(2):before { content: "玩家"; }
-    td:nth-of-type(3):before { content: "嘗試次數"; }
+    td:nth-of-type(3):before { content: "嘗試"; }
     td:nth-of-type(4):before { content: "時間"; }
 }
