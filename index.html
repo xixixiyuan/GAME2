@@ -14,13 +14,21 @@
         <div id="startScreen">
             <h2>🔮 猜數字遊戲 🔮</h2>
             <input type="text" id="playerName" placeholder="請輸入你的名字" autocomplete="off" />
+            <div class="difficulty-selection">
+                <label for="difficulty">選擇難度：</label>
+                <select id="difficulty">
+                    <option value="4">四位數 (0-9)</option>
+                    <option value="5">五位數 (0-9)</option>
+                    <option value="6">六位數 (0-9)</option>
+                </select>
+            </div>
             <button onclick="startGame()">🚀 開始遊戲</button>
         </div>
 
         <div id="gameScreen" style="display:none;" class="game-layout">
             <div class="left-panel">
                 <p class="player-info">玩家：<span id="displayName"></span></p>
-                <p class="level-info">等級：<span id="displayLevel">一般</span></p>
+                <p class="level-info">等級：<span id="displayLevel"></span></p>
                 <div class="leaderboard-panel">
                     <h3>✨ 排行榜 (前 10 名) ✨</h3>
                     <table>
@@ -38,14 +46,14 @@
             </div>
 
             <div class="right-panel">
-                <h1>猜數字遊戲</h1>
-                <p class="description">試著猜出四個不重複的數字 (0-9)：</p>
+                <h1 id="gameTitle">猜數字遊戲</h1>
+                <p class="description" id="gameDescription">試著猜出四個不重複的數字 (0-9)：</p>
                 <input type="text" id="guessInput" maxlength="4" inputmode="numeric" pattern="[0-9]*">
                 <div class="buttons">
                     <button id="guessButton">🔍 猜測</button>
                     <button id="giveUpButton">🏳️ 放棄</button>
                     <button id="restartButton" style="display:none;">🔄 重新挑戰</button>
-                    </div>
+                </div>
                 <div class="result-area">
                     <p id="result"></p>
                     <p id="answer" style="display:none;">答案是：<span class="secret-number"></span></p>
